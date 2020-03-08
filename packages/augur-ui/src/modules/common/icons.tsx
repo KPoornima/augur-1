@@ -897,7 +897,6 @@ export const MetaMask = (
       <g
         id="SoftwareWalletDisconnectedActive"
         transform="translate(-23.000000, -94.000000)"
-        stroke="#FFFFFF"
       >
         <g id="dropdown" transform="translate(0.000000, 72.000000)">
           <g id="metaMask" transform="translate(0.000000, 8.000000)">
