@@ -315,10 +315,9 @@ export class ZeroX {
   }
 
   async placeOrders(orders: ZeroXPlaceTradeDisplayParams[]): Promise<void> {
-    const onChainOrders = [];
-    for (const params of orders) {
-      onChainOrders.push(this.getOnChainTradeParams(params));
-    }
+    const onChainOrders = orders.map((params) => {
+      return this.getOnChainTradeParams(params);
+    });
     await this.placeOnChainOrders(onChainOrders);
   }
 

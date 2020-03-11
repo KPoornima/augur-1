@@ -115,10 +115,18 @@ export class FlashSession {
     return false;
   }
 
+  async ensureSimpleUser(
+    network?: string,
+    approveCentralAuthority = false,
+    accountAddress: string = null,
+  ): Promise<ContractAPI> {
+    return this.ensureUser(network, null, approveCentralAuthority, accountAddress, false, false);
+  }
+
   sdkReady = false;
   async ensureUser(
     network?: string,
-    wireUpSdk: boolean|null = null,
+    deprecated: boolean|null = null,
     approveCentralAuthority = true,
     accountAddress: string|null = null,
     useZerox: boolean = null,

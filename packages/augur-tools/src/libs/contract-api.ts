@@ -82,18 +82,18 @@ export class ContractAPI {
     await this.augur.contracts.cash.approve(this.augur.config.addresses.ZeroXTrade, new BigNumber(2).pow(256).minus(new BigNumber(1)));
   }
 
-  async createYesNoMarket(params: CreateYesNoMarketParams): Promise<ContractInterfaces.Market> {
-    await this.marketFauceting();
+  async createYesNoMarket(params: CreateYesNoMarketParams, faucet = true): Promise<ContractInterfaces.Market> {
+    if (faucet) await this.marketFauceting();
     return this.augur.createYesNoMarket(params);
   }
 
-  async createCategoricalMarket(params: CreateCategoricalMarketParams): Promise<ContractInterfaces.Market> {
-    await this.marketFauceting();
+  async createCategoricalMarket(params: CreateCategoricalMarketParams, faucet = true): Promise<ContractInterfaces.Market> {
+    if (faucet) await this.marketFauceting();
     return this.augur.createCategoricalMarket(params);
   }
 
-  async createScalarMarket(params: CreateScalarMarketParams): Promise<ContractInterfaces.Market> {
-    await this.marketFauceting();
+  async createScalarMarket(params: CreateScalarMarketParams, faucet = true): Promise<ContractInterfaces.Market> {
+    if (faucet) await this.marketFauceting();
     return this.augur.createScalarMarket(params);
   }
 
@@ -110,7 +110,7 @@ export class ContractAPI {
     await this.repFaucet(repBond.plus(10**18));
   }
 
-  async createReasonableYesNoMarket(description = 'YesNo market description'): Promise<ContractInterfaces.Market> {
+  async createReasonableYesNoMarket(description = 'YesNo market description', faucet=true): Promise<ContractInterfaces.Market> {
     const currentTimestamp = (await this.getTimestamp()).toNumber();
 
     return this.createYesNoMarket({
@@ -122,10 +122,10 @@ export class ContractAPI {
         categories: ['flash', 'Reasonable', 'YesNo'],
         description,
       }),
-    });
+    }, faucet);
   }
 
-  async createReasonableMarket(outcomes: string[], description = 'Categorical market description'): Promise<ContractInterfaces.Market> {
+  async createReasonableMarket(outcomes: string[], description = 'Categorical market description', faucet=true): Promise<ContractInterfaces.Market> {
     const currentTimestamp = (await this.getTimestamp()).toNumber();
 
     return this.createCategoricalMarket({
@@ -138,10 +138,10 @@ export class ContractAPI {
         description,
       }),
       outcomes,
-    });
+    }, faucet);
   }
 
-  async createReasonableScalarMarket(description = 'Scalar market description'): Promise<ContractInterfaces.Market> {
+  async createReasonableScalarMarket(description = 'Scalar market description', faucet=true): Promise<ContractInterfaces.Market> {
     const currentTimestamp = (await this.getTimestamp()).toNumber();
     const minPrice = new BigNumber(50).multipliedBy(new BigNumber(10).pow(18));
     const maxPrice = new BigNumber(250).multipliedBy(new BigNumber(10).pow(18));
@@ -158,7 +158,7 @@ export class ContractAPI {
       }),
       numTicks: new BigNumber(20000),
       prices: [minPrice, maxPrice],
-    });
+    }, faucet);
   }
 
   async placeOrder(
@@ -229,6 +229,7 @@ export class ContractAPI {
   }
 
   async placeZeroXOrders(params: ZeroXPlaceTradeDisplayParams[]): Promise<void> {
+    console.log(`${this.account.publicKey} is creating orders: ${JSON.stringify(params, null, 2)}`)
     await this.augur.zeroX.placeOrders(params);
   }
 
